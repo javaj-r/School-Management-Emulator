@@ -8,10 +8,11 @@ import view.Console;
  */
 public class Application {
 
-    public static final String help = """
-            commands list:    
-                
+    public static final String HELP = """
+            commands list:
+            
                     EXIT
+                    HELP
                     LOGOUT
                     
                     CREATE-STUDENT    username password [Optional: firstname lastname nationalCode]
@@ -42,10 +43,8 @@ public class Application {
                     REGISTER-COURSE   courseName
             """;
 
-
-
     public static void main(String[] args) {
-        System.out.println(help);
+        System.out.println(HELP);
         new Console();
     }
 

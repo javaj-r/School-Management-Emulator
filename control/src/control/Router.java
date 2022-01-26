@@ -38,7 +38,6 @@ public class Router {
 
         } catch (Exception ignored) {
             ignored.printStackTrace();
-
         }
 
         return null;
@@ -52,7 +51,6 @@ public class Router {
 
             String switchKye = key.indexOf('-') == -1 ? key
                     : key.substring(key.indexOf('-') + 1);
-
 
             return switch (switchKye) {
 
@@ -70,7 +68,6 @@ public class Router {
             };
 
         } catch (Exception ignored) {
-            ignored.printStackTrace();
         }
 
         return null;
@@ -91,11 +88,9 @@ public class Router {
                         .setBody("Hi " + username + "!");
             }
         } catch (Exception ignored) {
-            System.out.println(ignored.getMessage());
         }
         return null;
     }
-
 
     private static class Session {
         private int intId;

@@ -8,7 +8,7 @@ import util.Screen;
 
 import java.util.Arrays;
 
-import static app.Application.help;
+import static app.Application.HELP;
 
 /**
  * @author javid
@@ -31,7 +31,6 @@ public class Console {
     }
 
     private void loginMenu() {
-
         String username = Screen.getString(authorisedUser + " username: ").trim().toLowerCase();
         if (username.isEmpty())
             loginMenu();
@@ -59,43 +58,45 @@ public class Console {
             System.out.println(response.getBody());
             authorisedUserMenu();
         }
-
     }
 
     private void authorisedUserMenu() {
         while (true) {
-            String input = Screen.getString(authorisedUser).trim();
-            if (input.isEmpty())
-                continue;
+            try {
+                String input = Screen.getString(authorisedUser).trim();
+                if (input.isEmpty())
+                    continue;
 
-            if (input.equalsIgnoreCase("help")){
-                System.out.println(help);
-                continue;
-            }
-
-
-            String[] inputArray = input.split(" +");
-            String key = inputArray[0].toLowerCase();
-            Request request = getRequest();
-
-            if (inputArray.length == 1) {
-                if (key.equals("exit")) {
-                    request.setKeyWord("logout");
-                    printResponseBody(server.request(request));
-                    System.exit(0);
-                    break;
-                } else if (key.equals("logout")) {
-                    request.setKeyWord(key);
-                    printResponseBody(server.request(request));
-                    this.sessionId = null;
-                    this.authorisedUser = this.notAuthorisedUser;
-                    loginMenu();
+                if (input.equalsIgnoreCase("help")) {
+                    System.out.println(HELP);
+                    continue;
                 }
-            } else {
-                GenericList<String> commands = new GenericList<>(Arrays.copyOfRange(inputArray, 1, inputArray.length));
-                request.setKeyWord(key)
-                        .setBody(commands);
-                printResponseBody(server.request(request));
+
+                String[] inputArray = input.split(" +");
+                String key = inputArray[0].toLowerCase();
+                Request request = getRequest();
+
+                if (inputArray.length == 1) {
+                    if (key.equals("exit")) {
+                        request.setKeyWord("logout");
+                        printResponseBody(server.request(request));
+                        System.exit(0);
+                        break;
+                    } else if (key.equals("logout")) {
+                        request.setKeyWord(key);
+                        printResponseBody(server.request(request));
+                        this.sessionId = null;
+                        this.authorisedUser = this.notAuthorisedUser;
+                        loginMenu();
+                    }
+                } else {
+                    GenericList<String> commands = new GenericList<>(Arrays.copyOfRange(inputArray, 1, inputArray.length));
+                    request.setKeyWord(key)
+                            .setBody(commands);
+                    printResponseBody(server.request(request));
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
