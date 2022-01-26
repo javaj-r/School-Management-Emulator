@@ -20,9 +20,10 @@ public class CourseController extends AbstractUserController implements Controll
 
     @Override
     public Response rout(User user, Request request) {
-        if (!validator.isValid(user, request)) {
-            return getResponse(request)
-                    .setBody("You are not permitted to this request!");
+        try {
+            validator.isValid(user, request);
+        } catch (Exception e) {
+            return getResponse(request).setBody(e.getMessage());
         }
 
         String key = request.getKeyWord();
@@ -153,13 +154,13 @@ public class CourseController extends AbstractUserController implements Controll
         if (units > student.getUnitsLimit())
             return getResponse(request).setBody("Out of units limit!");
 
-        if (course.getRequiredCourse() == null || student.isPassed(course.getRequiredCourse())){
+        if (course.getRequiredCourse() == null || student.isPassed(course.getRequiredCourse())) {
             course.getStudents().add(student);
             student.getCourses().put(course, null);
             return getResponse(request).setBody("You registered successfully.");
         }
 
-        String requiredCourse =  course.getRequiredCourse() != null ? course.getRequiredCourse().getName() : "";
+        String requiredCourse = course.getRequiredCourse() != null ? course.getRequiredCourse().getName() : "";
         return getResponse(request).setBody("You did not passed " + requiredCourse);
     }
 }

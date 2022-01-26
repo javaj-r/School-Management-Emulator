@@ -20,9 +20,10 @@ public class ProfessorController extends AbstractUserController implements Contr
 
     @Override
     public Response rout(User user, Request request) {
-        if (!validator.isValid(user, request)) {
-            return getResponse(request)
-                    .setBody("You are not permitted to this request!");
+        try {
+            validator.isValid(user, request);
+        } catch (Exception e) {
+            return getResponse(request).setBody(e.getMessage());
         }
 
         String key = request.getKeyWord();

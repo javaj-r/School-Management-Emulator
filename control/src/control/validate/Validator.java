@@ -2,6 +2,7 @@ package control.validate;
 
 import constant.Permit;
 import control.Request;
+import control.exception.ValidationException;
 import data.user.Root;
 import model.User;
 
@@ -13,23 +14,23 @@ import java.util.Map;
  */
 public class Validator {
 
-    private final Map<String, Permit> permission_map;
+    private final Map<String, Permit> permissionMap;
 
     Validator(Map<String, Permit> permissions) {
-        this.permission_map = permissions;
+        this.permissionMap = permissions;
     }
 
-    public boolean isValid(User user, Request request) {
+    public void isValid(User user, Request request) {
 
         if (isValid(user))
-            return true;
+            return;
 
-        Permit permit = permission_map.get(request.getKeyWord());
+        Permit permit = permissionMap.get(request.getKeyWord());
 
-        if (permit == null)
-            return true;
+        if (permit == null || user.getPermissions().contains(permit))
+            return;
 
-        return user.getPermissions().contains(permit);
+        throw new ValidationException("You are not permitted to this request!");
     }
 
 
